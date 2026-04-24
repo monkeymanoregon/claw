@@ -4,11 +4,15 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 10000;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+app.get('/', (req, res) => {
+  res.send('Idea Helper backend is alive!');
+});
 
 app.post('/api/idea', async (req, res) => {
   const { prompt } = req.body;
@@ -31,10 +35,10 @@ app.post('/api/idea', async (req, res) => {
     const idea = response.data.choices?.[0]?.message?.content;
     res.json({ idea: (idea || 'No idea generated, try again!').trim() });
   } catch (err) {
-    res.status(500).json({ error: 'Error fetching idea', details: err.message });
+    res.status(500).json({ error: 'Error fetching idea', details: err.response?.data || err.message });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Idea Helper backend running on http://localhost:${PORT}`);
+  console.log(`Idea Helper backend running on port ${PORT}`);
 });
