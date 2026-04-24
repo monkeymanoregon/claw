@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: idea-helper-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    rootDir: server
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false # you will set this securely in the Render dashboard
+    
