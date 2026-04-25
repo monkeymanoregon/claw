@@ -1,51 +1,30 @@
 import React, { useState } from 'react';
-import getApiUrl from './config';
 import './App.css';
 
 function App() {
-  const [prompt, setPrompt] = useState('');
-  const [idea, setIdea] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-    setIdea('');
-    try {
-      const res = await fetch(getApiUrl(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
-      });
-      const data = await res.json();
-      if (data.idea) {
-        setIdea(data.idea);
-      } else {
-        setError(data.error || 'No idea returned.');
-      }
-    } catch (err) {
-      setError('Failed to get idea.');
-    }
-    setLoading(false);
+    setOutput(`You typed: ${input}`);
   };
 
   return (
     <div className="App">
-      <h1>Idea Helper</h1>
+      <h1>Idea Helper (Live Test Version)</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          value={prompt}
-          onChange={e => setPrompt(e.target.value)}
-          placeholder="What are you stuck on?"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          placeholder="Type anything..."
           required
         />
-        <button type="submit" disabled={loading}>{loading ? 'Thinking...' : 'Give me an idea!'}</button>
+        <button type="submit">Test Submit</button>
       </form>
-      {error && <p style={{color:'red'}}>{error}</p>}
-      {idea && <div className="idea"><h3>Idea:</h3><div>{idea}</div></div>}
+      {output && <div style={{marginTop:20}}>Output: {output}</div>}
+      <p style={{marginTop:40, color:'#888'}}>This is a LIVE deployment test. API hookup comes next!</p>
     </div>
   );
 }
